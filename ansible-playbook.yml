@@ -25,7 +25,7 @@
         dest: /home/ubuntu/prometheus.yml
     
     - name: run prometheus container
-      command: docker run -d -p 9696:9696 --name prometheus -v /home/ubuntu/prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus
+      command: docker run -d -p 9090:9090 --name prometheus -v /home/ubuntu/prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus
 
     - name: run grafana container
-      command: docker run -d -p 7007:7007 --name grafana grafana/grafana
+      command: docker run -d -p 3000:3000 --name grafana grafana/grafana
