@@ -10,7 +10,7 @@
       apt:
         name: docker.io
     - name: Deploy Docker Container
-      command: docker run -itd --name capstone01 -p 8084:8081 abhis2024/finance_app:${env.TIMESTAMP}
+      command: docker run -itd --name capstone01 -p 8084:8081 abhis2024/finance_app:$TIMESTAMP
 
     - name: getting node exporter
       shell: |
