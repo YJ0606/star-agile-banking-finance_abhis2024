@@ -1,31 +1,65 @@
 - hosts: all
   become: yes
-  name: installing packages,building and containerize the application
+  name: Installing packages, building, and containerizing the application
   tasks:
-    - name: updating the machine
+    - name: Update the machine
       apt:
         upgrade: dist
         update_cache: yes
-    - name: Installing and docker
+
+    - name: Install Docker
       apt:
         name: docker.io
+        state: present
+
+    - name: Start Docker service
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
     - name: Deploy Docker Container
-      command: docker run -itd --name capstone01 -p 8084:8081 abhis2024/finance_app:$TIMESTAMP
+      docker_container:
+        name: capstone01
+        image: abhis2024/finance_app:{{ lookup('env', 'TIMESTAMP') }}
+        state: started
+        ports:
+          - "8084:8081"
 
-    - name: getting node exporter
+    - name: Get Node Exporter
+      get_url:
+        url: https://github.com/prometheus/node_exporter/releases/download/v1.8.2/node_exporter-1.8.2.linux-amd64.tar.gz
+        dest: /tmp/node_exporter-1.8.2.linux-amd64.tar.gz
+
+    - name: Extract Node Exporter
+      unarchive:
+        src: /tmp/node_exporter-1.8.2.linux-amd64.tar.gz
+        dest: /tmp/
+        remote_src: yes
+
+    - name: Run Node Exporter
       shell: |
-        wget https://github.com/prometheus/node_exporter/releases/download/v1.8.2/node_exporter-1.8.2.linux-amd64.tar.gz
-        tar -xvf node_exporter-1.8.2.linux-amd64.tar.gz
-        cd node_exporter-1.8.2.linux-amd64
-        nohup ./node_exporter > /dev/null 2>&1 &
+        nohup /tmp/node_exporter-1.8.2.linux-amd64/node_exporter > /dev/null 2>&1 &
 
-    - name: Download prometheus.yml from the repo
+    - name: Download Prometheus configuration
       get_url:
         url: https://raw.githubusercontent.com/abhis2024/star-agile-banking-finance_abhis2024/master/prometheus.yml
         dest: /home/ubuntu/prometheus.yml
-    
-    - name: run prometheus container
-      command: docker run -d -p 9090:9090 --name prometheus -v /home/ubuntu/prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus
 
-    - name: run grafana container
-      command: docker run -d -p 3000:3000 --name grafana grafana/grafana
+    - name: Run Prometheus container
+      docker_container:
+        name: prometheus
+        image: prom/prometheus
+        state: started
+        ports:
+          - "9090:9090"
+        volumes:
+          - /home/ubuntu/prometheus.yml:/etc/prometheus/prometheus.yml
+
+    - name: Run Grafana container
+      docker_container:
+        name: grafana
+        image: grafana/grafana
+        state: started
+        ports:
+          - "3000:3000"
