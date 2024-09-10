@@ -16,17 +16,7 @@ provider "aws" {
 resource "aws_key_pair" "example" {
   key_name   = "project-key"
   public_key = file("~/.ssh/id_ed25519.pub")
-
-  lifecycle {
-    prevent_destroy = true  # Prevent the key pair from being destroyed.
   }
-
-  # Ignore if the key pair already exists
-  provisioner "local-exec" {
-    command = "echo 'Key pair already exists, skipping creation' || exit 0"
-    when    = destroy
-  }
-}
 
 # AWS Security Group allowing all traffic
 resource "aws_security_group" "allow_all" {
