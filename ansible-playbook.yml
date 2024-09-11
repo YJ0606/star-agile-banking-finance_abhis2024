@@ -25,6 +25,7 @@
         state: started
         ports:
           - "8084:8081"
+        restart_policy: always
 
     - name: Get Node Exporter
       get_url:
