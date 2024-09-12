@@ -39,7 +39,7 @@ resource "aws_security_group" "allow_all" {
 
 # EC2 Instance Creation
 resource "aws_instance" "server" {
-  ami           = "ami-0522ab6e1ddcc7055"
+  ami           = "ami-0e86e20dae9224db8"
   instance_type = var.instance_type
   key_name      = "project-key"
   vpc_security_group_ids = [aws_security_group.allow_all.id]
