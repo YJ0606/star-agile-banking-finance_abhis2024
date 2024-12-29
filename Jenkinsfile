@@ -24,7 +24,7 @@ pipeline {
             steps {
                 script {
                     // Build the Docker image with the timestamp tag
-                    sh "docker build -t abhis2024/finance_app:${TIMESTAMP} ."
+                    sh "docker build -t yash3033/finance_app:${TIMESTAMP} ."
 
                     // List Docker images to verify
                     sh 'docker images'
