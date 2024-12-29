@@ -21,7 +21,7 @@
     - name: Deploy Docker Container
       docker_container:
         name: capstone01
-        image: abhis2024/finance_app:{{ lookup('env', 'TIMESTAMP') }}
+        image: yash3033/finance_app:{{ lookup('env', 'TIMESTAMP') }}
         state: started
         ports:
           - "8084:8081"
