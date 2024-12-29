@@ -38,7 +38,7 @@ pipeline {
                     sh "echo $PASS | docker login -u $USER --password-stdin"
 
                     // Push the Docker image with the timestamp tag
-                    sh "docker push abhis2024/finance_app:${TIMESTAMP}"
+                    sh "docker push yash3033/finance_app:${TIMESTAMP}"
                 }
             }
         }
